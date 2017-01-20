@@ -63,6 +63,7 @@ exports.theaterCloseBy = function(req, res) {
 }
 
 exports.getAllocineCodeFromTitle = function(title) {
-  options.url = allocineApiUrl + 'search?partner=' + partnerCode + '&q=' + title + '&filter=movie&count=1&format=json';
+  options.url = allocineApiUrl + 'search?partner=' + partnerCode + '&q=' + encodeURIComponent(title) + '&filter=movie&count=1&format=json';
+  console.log(options.url);
   return rp(options);
 }

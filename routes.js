@@ -45,7 +45,7 @@ module.exports = function(app) {
         } else {
 
           var token = jwt.sign(user, app.get('superSecret'), {
-            expiresIn : 60*60*24*90 //expires in 90days
+            expiresIn : 60*60*24*15 //expires in 90days
           });
 
           user.token = token;

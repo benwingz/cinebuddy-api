@@ -2,10 +2,10 @@ var config = require('../../config');
 var request = require('request');
 var mongoose = require('mongoose');
 
-var User = require('./app/models/user');
+var User = require('../models/user');
 
 exports.createUser = function(req, res) {
-  if(!req.body.name || !req.body.email || req.body.password) {
+  if(!req.body.name || !req.body.password || !req.body.email) {
     res.json({ success: false, message: "Missing parameters, user can't be created."});
   } else {
     var newUser = new User({

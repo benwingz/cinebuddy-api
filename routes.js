@@ -16,7 +16,7 @@ module.exports = function(app) {
 
   var movies = require('./app/controllers/movies');
   var allocine = require('./app/controllers/allocine');
-  var allocine = require('./app/controllers/cinebuddy');
+  var cinebuddy = require('./app/controllers/cinebuddy');
 
   //unauthenticate routes
   apiRoutes.use(function(req,res,next){
@@ -25,7 +25,7 @@ module.exports = function(app) {
     next();
   });
 
-  apiToutes.post('/user', cinebuddy.createUser);
+  apiRoutes.post('/user', cinebuddy.createUser);
 
   apiRoutes.post('/authenticate', function(req, res) {
     User.findOne({
@@ -46,10 +46,11 @@ module.exports = function(app) {
 
           var token = jwt.sign(user, app.get('superSecret'), {
             expiresIn : 60*60*24*90 //expires in 90days
-            user.token = token;
-            user.save(function(err) {
-              if (err) throw err;
-            });
+          });
+
+          user.token = token;
+          user.save(function(err) {
+            if (err) throw err;
           });
 
           res.json({

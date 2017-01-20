@@ -50,8 +50,6 @@ exports.findById = function(req, res) {
           }
         }
       )
-      //response[0].idAllocine = allocine.getAllocineCodeFromTitle(response[0].original_title);
-      //res.send(response);
     }
   })
 };

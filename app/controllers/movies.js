@@ -41,13 +41,10 @@ exports.findById = function(req, res) {
   request(movieApiBaseUrl + '/movie/' + req.params.id + '?api_key=' + apiKeyMovieDB + '&language=fr-FR', function(error, response, content) {
     if (!error) {
       var response = populateImagesUrl([JSON.parse(content)]);
-      allocine.getAllocineCodeFromTitle(response[0].title).then(
-        function(contentAllocine) {
-          if(JSON.parse(contentAllocine).feed.totalResults !== 0) {
-            var response = JSON.parse(content);
-            response.idAllocine = JSON.parse(contentAllocine).feed.movie[0].code;
-            res.send(response);
-          }
+      var idShowtimeProvider = allocine.getAllocineCodeFromTitle(response[0].title, response[0].id).then(
+        function(idShowtimeProvider) {
+          response[0].idShowtimeProvider = idShowtimeProvider;
+          res.send(response);
         }
       )
     }

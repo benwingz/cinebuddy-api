@@ -1,5 +1,6 @@
 var config = require('../../config');
 var request = require('request');
+var Matchid = require('../models/Matchid');
 var rp = require('request-promise');
 var partnerCode = config.showtimeProviderAPIkey;
 var allocineApiUrl = config.showtimeProviderUrl;
@@ -60,10 +61,35 @@ exports.theaterCloseBy = function(req, res) {
       console.log(error);
     }
   });
-}
+};
 
-exports.getAllocineCodeFromTitle = function(title) {
-  options.url = allocineApiUrl + 'search?partner=' + partnerCode + '&q=' + encodeURIComponent(title) + '&filter=movie&count=1&format=json';
-  console.log(options.url);
-  return rp(options);
-}
+exports.getAllocineCodeFromTitle = function(title, id) {
+  return new Promise(function(fulfill, reject) {
+    Matchid.findOne({
+      idMovieDb: id
+    }, function(err, matchid) {
+      if (err) reject(err);
+
+      if (!matchid) {
+        options.url = allocineApiUrl + 'search?partner=' + partnerCode + '&q=' + encodeURIComponent(title) + '&filter=movie&count=1&format=json';
+        request(options, function(error, response, content) {
+          if (!error) {
+            var idShowtimeProvider = JSON.parse(content).feed.movie[0].code;
+            var newMatchid = new Matchid({
+              idMovieDb: id,
+              idShowtimeProvider: idShowtimeProvider
+            });
+            newMatchid.save(function(err) {
+              if(err) reject(err);
+            });
+            fulfill(idShowtimeProvider);
+          } else {
+            reject(error);
+          }
+        });
+      } else {
+        fulfill(matchid.idShowtimeProvider);
+      }
+    });
+  });
+};

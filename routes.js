@@ -24,7 +24,9 @@ module.exports = function(app) {
 
     next();
   });
-
+  apiRoutes.get('/', function(req, res) {
+    res.json('welcome to the coolest cinema API on earth!!!');
+  });
   apiRoutes.post('/user', cinebuddy.createUser);
 
   apiRoutes.post('/authenticate', function(req, res) {
@@ -90,9 +92,6 @@ module.exports = function(app) {
   });
 
   //authenticate routes
-  apiRoutes.get('/', function(req, res) {
-    res.json('welcome to the coolest API on earth!!!');
-  });
   apiRoutes.get('/movies', movies.findAll);
   apiRoutes.get('/movie/:id', movies.findById);
   apiRoutes.get('/showtime/', allocine.findShowTime);

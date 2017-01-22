@@ -1,6 +1,6 @@
 var config = require('../../config');
 var request = require('request');
-var allocine = require('./allocine');
+var allocine = require('./showtime');
 var apiKeyMovieDB = config.apiKeyMovieDB;
 var movieApiBaseUrl = config.movieApiBaseUrl;
 var imagesbaseurl, backdropsize, postersize;

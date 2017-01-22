@@ -15,7 +15,7 @@ module.exports = function(app) {
   var apiRoutes = express.Router();
 
   var movies = require('./app/controllers/movies');
-  var allocine = require('./app/controllers/allocine');
+  var allocine = require('./app/controllers/showtime');
   var cinebuddy = require('./app/controllers/cinebuddy');
 
   //unauthenticate routes
@@ -66,7 +66,7 @@ module.exports = function(app) {
 
     });
   });
-
+  
   apiRoutes.use(function(req,res,next){
 
     var token = req.body.token || req.query.token || req.headers['x-access-token'];

@@ -1,6 +1,6 @@
 var config = require('../../config');
 var request = require('request');
-var Matchid = require('../models/Matchid');
+var Matchid = require('../models/matchid');
 var rp = require('request-promise');
 var partnerCode = config.showtimeProviderAPIkey;
 var allocineApiUrl = config.showtimeProviderUrl;

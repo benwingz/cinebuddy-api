@@ -16,6 +16,6 @@ module.exports = mongoose.model('Showtime', new Schema({
   showtime_users: [{
     user: Schema.Type.ObjectId,
     ref: 'User',
-    showtime: Date $
+    availability_showtime: Date
   }],
 }))

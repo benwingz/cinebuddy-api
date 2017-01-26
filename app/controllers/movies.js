@@ -21,10 +21,9 @@ var populateImagesUrl = function(content) {
 
 var saveMovieInDb = function(movie) {
   var newMovie = new Movie(movie);
-  newMovie.save(function(err) {
-    if (err) throw err;
-    console.log('new movie added to database');
-  });
+
+  var promise = newMovie.save()
+  return promise;
 };
 
 request(movieApiBaseUrl + '/configuration?api_key=' + apiKeyMovieDB, function(error, response, content) {
@@ -58,8 +57,9 @@ exports.findById = function(req, res) {
           var idShowtimeProvider = allocine.getAllocineCodeFromTitle(response.title, response.id).then(
             function(idShowtimeProvider) {
               response.idShowtimeProvider = idShowtimeProvider;
-              saveMovieInDb(response);
-              res.send(response);
+              saveMovieInDb(response).then(function(movie) {
+                res.send(movie);
+              });
             }
           )
         }

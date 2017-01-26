@@ -1,10 +1,10 @@
 module.exports = {
 
-  'secret': '', //YOUR SECRET TO ENCODE JWT
-  'database': '', //LINK TO YOUR MONGODB
-  'showtimeProviderAPIkey' : '', //PARTNER CODE TO YOUR SHOWTIME PROVIDER
-  'showtimeProviderUrl' : '', //URL TO YOUR SHOWTIME PROVIDER API
-  'apiKeyMovieDB' : '', //YOUR API KEY OF MOVIEDB
-  'movieApiBaseUrl' : 'https://api.themoviedb.org/3' //BASE URL FOR MOVIEDB API
+  'secret': process.env.JWT_SECRET,
+  'database': process.env.DATABASE_URI,
+  'showtimeProviderAPIkey' : process.env.SHOWTIME_PROVIDER_API_KEY,
+  'showtimeProviderUrl' : process.env.SHOWTIME_PROVIDER_API_URL,
+  'apiKeyMovieDB' : process.env.MOVIE_DB_API_KEY,
+  'movieApiBaseUrl' : process.env.MOVIE_DB_API_URL
 
 };

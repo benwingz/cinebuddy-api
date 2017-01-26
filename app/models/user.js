@@ -9,4 +9,4 @@ module.exports = mongoose.model('User', new Schema({
   email: String,
   token: String,
   admin: Boolean
-}))
+}));

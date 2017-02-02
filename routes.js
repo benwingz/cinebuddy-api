@@ -2,9 +2,9 @@ module.exports = function(app) {
   var express = require('express');
   var mongoose = require('mongoose');
   var bodyParser = require('body-parser');
-  var jwt = require('jsonwebtoken');
   var config = require('./config');
   var User = require('./app/models/user');
+  var jwt = require('jsonwebtoken');
 
   mongoose.connect(config.database);
   app.set('superSecret', config.secret);
@@ -17,6 +17,7 @@ module.exports = function(app) {
   var movies = require('./app/controllers/movies');
   var allocine = require('./app/controllers/showtime');
   var cinebuddy = require('./app/controllers/cinebuddy');
+  var user = require('./app/controllers/user');
 
   //unauthenticate routes
   apiRoutes.use(function(req,res,next){
@@ -27,45 +28,9 @@ module.exports = function(app) {
   apiRoutes.get('/', function(req, res) {
     res.json('welcome to the coolest cinema API on earth!!!');
   });
-  apiRoutes.post('/user', cinebuddy.createUser);
+  apiRoutes.post('/user', user.createUser);
 
-  apiRoutes.post('/authenticate', function(req, res) {
-    User.findOne({
-      email: req.body.email
-    }, function(err, user) {
-
-      if (err) throw err;
-
-      if (!user) {
-
-        res.json({ success: false, message: 'Authentication failed. User not found.'});
-
-      } else if (user) {
-
-        if (user.password != req.body.password) {
-          res.json({ success: false, message: 'Authentication failed. Wrong password'});
-        } else {
-
-          var token = jwt.sign(user, app.get('superSecret'), {
-            expiresIn : 60*60*24*15 //expires in 90days
-          });
-
-          user.token = token;
-          user.save(function(err) {
-            if (err) throw err;
-          });
-
-          res.json({
-            success: true,
-            message: 'loggin success',
-            token: token
-          });
-        }
-
-      }
-
-    });
-  });
+  apiRoutes.post('/authenticate', user.authenticate);
 
   apiRoutes.use(function(req,res,next){
 
@@ -92,7 +57,7 @@ module.exports = function(app) {
   });
 
   //authenticate routes
-  apiRoutes.get('/me', cinebuddy.findUser);
+  apiRoutes.get('/me', user.findUser);
   apiRoutes.get('/movies', movies.findAll);
   apiRoutes.get('/movie/:id', movies.findById);
   apiRoutes.get('/showtime/', allocine.findShowTime);

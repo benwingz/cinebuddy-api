@@ -66,7 +66,7 @@ module.exports = function(app) {
 
     });
   });
-  
+
   apiRoutes.use(function(req,res,next){
 
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -92,11 +92,14 @@ module.exports = function(app) {
   });
 
   //authenticate routes
+  apiRoutes.get('/me', cinebuddy.findUser);
   apiRoutes.get('/movies', movies.findAll);
   apiRoutes.get('/movie/:id', movies.findById);
   apiRoutes.get('/showtime/', allocine.findShowTime);
   apiRoutes.get('/searchmovie/:id', allocine.findMovieById);
   apiRoutes.get('/theatercloseby/', allocine.theaterCloseBy);
+  apiRoutes.post('/showing/', cinebuddy.createShowing);
+  apiRoutes.get('/showing/:id', cinebuddy.getShowing);
 
   app.use('/api', apiRoutes);
 }

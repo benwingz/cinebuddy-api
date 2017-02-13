@@ -23,7 +23,18 @@ module.exports = function(app) {
   apiRoutes.use(function(req,res,next){
     res.contentType('application/json');
 
-    next();
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Access-Control-Allow-Origin');
+
+    console.log(req.method);
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    }
+    else {
+      next();
+    }
   });
   apiRoutes.get('/', function(req, res) {
     res.json('welcome to the coolest cinema API on earth!!!');

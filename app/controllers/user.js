@@ -20,13 +20,13 @@ exports.authenticate = function(req, res) {
       if (user.password != req.body.password) {
         res.json({ success: false, message: 'Authentication failed. Wrong password'});
       } else {
-        delete user.token;
+        user.token = '';
         var token = jwt.sign(user, config.secret, {
           expiresIn : 60*60*24*15 //expires in 90days
         });
 
         user.token = token;
-        
+
         user.save(function(err) {
           if (err) throw err;
         });
@@ -78,7 +78,10 @@ exports.findUser = function(req, res) {
       if (!user) {
         res.json({ success: false, message: 'No user relative to this token'});
       } else {
-        res.json(user);
+        var userResponse = user;
+        delete userResponse.token;
+        delete userResponse.password;
+        res.json(userResponse);
       }
     });
   }

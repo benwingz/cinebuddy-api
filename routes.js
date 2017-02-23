@@ -45,8 +45,11 @@ module.exports = function(app) {
 
   apiRoutes.use(function(req,res,next){
 
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization'];
 
+    if( token.indexOf('Bearer ') !== -1) {
+      token = token.replace('Bearer ', '');
+    }
     if (token) {
       jwt.verify(token, app.get('superSecret'), function(err, decoded) {
         if (err) {

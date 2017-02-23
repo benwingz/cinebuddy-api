@@ -72,11 +72,12 @@ exports.createUser = function(req, res) {
 exports.findUser = function(req, res) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization'];
 
-  if( token.indexOf('Bearer ') !== -1) {
+  if( token && token.indexOf('Bearer ') !== -1) {
     token = token.replace('Bearer ', '');
   }
   if(token) {
-    User.findOne({token: token}, function(err, user) {
+    var decoded = jwt.decode(token);
+    User.findOne({_id: decoded._doc._id}, function(err, user) {
       if (err) throw err;
       if (!user) {
         res.json({ success: false, message: 'No user relative to this token'});

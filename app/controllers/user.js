@@ -13,14 +13,13 @@ exports.authenticate = function(req, res) {
 
     if (!user) {
 
-      res.json({ success: false, message: 'Authentication failed. User not found.'});
+      createUser(req, res);
 
     } else if (user) {
 
       if (user.ionic_cloud_id != req.body.cloud_id) {
-        createUser(req, res);
+        res.json({ success: false, message: 'The password is not matching'});
       } else {
-        user.token = '';
         var token = jwt.sign(user, config.secret, {
           expiresIn : 60*60*24*15 //expires in 90days
         });
@@ -59,12 +58,15 @@ createUser = function(req, res) {
           fb_full_name: req.body.fb_full_name,
           admin: false
         })
+        var token = jwt.sign(newUser, config.secret, {
+          expiresIn : 60*60*24*15 //expires in 90days
+        });
 
         newUser.save(function(err) {
           if(err) throw err;
 
           console.log('User created');
-          res.json({ success: true, message: 'User have been successfully created'});
+          res.json({ success: true, message: 'Account creation and loggin success', token: token});
         });
       }
     });

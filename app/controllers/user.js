@@ -17,8 +17,8 @@ exports.authenticate = function(req, res) {
 
     } else if (user) {
 
-      if (user.password != req.body.password) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password'});
+      if (user.ionic_cloud_id != req.body.cloud_id) {
+        createUser(req, res);
       } else {
         user.token = '';
         var token = jwt.sign(user, config.secret, {
@@ -43,8 +43,8 @@ exports.authenticate = function(req, res) {
   });
 };
 
-exports.createUser = function(req, res) {
-  if(!req.body.name || !req.body.password || !req.body.email) {
+createUser = function(req, res) {
+  if(!req.body.email || !req.body.cloud_id || !req.body.fb_full_name || !req.body.fb_id) {
     res.json({ success: false, message: "Missing parameters, user can't be created."});
   } else {
     User.findOne({email: req.body.email}, function(err, user) {
@@ -53,9 +53,11 @@ exports.createUser = function(req, res) {
         res.json({ success: false, message: 'This email is already used'});
       } else {
         var newUser = new User({
-          name: req.body.name,
-          password: req.body.password,
           email: req.body.email,
+          fb_id: req.body.fb_id,
+          ionic_cloud_id:req.body.cloud_id,
+          fb_full_name: req.body.fb_full_name,
+          admin: false
         })
 
         newUser.save(function(err) {

@@ -5,8 +5,9 @@ var Schema = mongoose.Schema;
 // Set up a mongoose model and pass it using module.exports
 module.exports = mongoose.model('User', new Schema({
   name: String,
-  password: String,
   email: String,
-  token: String,
+  fb_id: Number,
+  ionic_cloud_id:Number,
+  fb_full_name: String,
   admin: Boolean
 }));

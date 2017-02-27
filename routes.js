@@ -39,7 +39,7 @@ module.exports = function(app) {
   apiRoutes.get('/', function(req, res) {
     res.json('welcome to the coolest cinema API on earth!!!');
   });
-  apiRoutes.post('/user', user.createUser);
+  //apiRoutes.post('/user', user.createUser);
 
   apiRoutes.post('/authenticate', user.authenticate);
 

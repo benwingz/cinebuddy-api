@@ -69,7 +69,7 @@ createUser = function(req, res) {
       }
     });
 
-  } else if(!req.body.email || !req.body.cloud_id || !req.body.fb_full_name || !req.body.fb_id) {
+  } else if(!req.body.email || !req.body.cloud_id || !req.body.fb_full_name || !req.body.fb_id || !req.body.fb_profile_picture) {
     res.json({ success: false, message: "Missing parameters, user can't be created."});
   } else {
     User.findOne({email: req.body.email}, function(err, user) {
@@ -82,6 +82,7 @@ createUser = function(req, res) {
           fb_id: req.body.fb_id,
           ionic_cloud_id:req.body.cloud_id,
           fb_full_name: req.body.fb_full_name,
+          fb_profile_picture: req.body.fb_full_name,
           admin: false
         })
         var token = jwt.sign(newUser, config.secret, {
@@ -101,7 +102,7 @@ createUser = function(req, res) {
 
 exports.findUser = function(req, res) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization'];
-  
+
   if( token && token.indexOf('Bearer ') !== -1) {
     token = token.replace('Bearer ', '');
   }

@@ -47,7 +47,7 @@ module.exports = function(app) {
 
     var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization'];
 
-    if( token.indexOf('Bearer ') !== -1) {
+    if(token && token.indexOf('Bearer ') !== -1) {
       token = token.replace('Bearer ', '');
     }
     if (token) {

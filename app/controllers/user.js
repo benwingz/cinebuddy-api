@@ -16,7 +16,6 @@ exports.authenticate = function(req, res) {
         var newtoken = jwt.sign(user, config.secret, {
           expiresIn : 60*60*24*15 //expires in 90days
         });
-
         res.json({
           success: true,
           message: 'loggin success',

@@ -7,7 +7,11 @@ var movieApiBaseUrl = config.movieApiBaseUrl;
 var imagesbaseurl, backdropsize, postersize;
 
 var populateImagesUrl = function(content) {
-  var movies = content;
+  if(content.results) {
+    var movies = content.results;
+  } else {
+    var movies = content;
+  }
   for (var i = 0; i < movies.length; i++) {
     if(movies[i].backdrop_path){
       movies[i].backdrop_path = imagesbaseurl + backdropsize + movies[i].backdrop_path;
@@ -32,6 +36,8 @@ request(movieApiBaseUrl + '/configuration?api_key=' + apiKeyMovieDB, function(er
     imagesbaseurl = content.images.base_url;
     backdropsize = 'w780';
     postersize = 'original';
+  } else {
+    console.log(error);
   }
 });
 
@@ -41,7 +47,7 @@ exports.findAll = function(req, res) {
   }
   request(movieApiBaseUrl + '/movie/now_playing?api_key=' + apiKeyMovieDB + '&language=fr-FR&page=' + req.query.page, function(error, response, content){
     if (!error) {
-      res.send(JSON.parse(content));
+      res.send(populateImagesUrl(JSON.parse(content)));
     }
   });
 };

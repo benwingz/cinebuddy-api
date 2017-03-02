@@ -13,9 +13,11 @@ exports.authenticate = function(req, res) {
         return res.json({ success: false, message: 'Failed to authenticate token.'})
       } else {
         var user = jwt.decode(token)._doc;
+        console.log('user', user);
         var newtoken = jwt.sign(user, config.secret, {
           expiresIn : 60*60*24*15 //expires in 90days
         });
+
         res.json({
           success: true,
           message: 'loggin success',

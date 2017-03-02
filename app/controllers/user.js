@@ -5,41 +5,73 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 
 exports.authenticate = function(req, res) {
-  User.findOne({
-    email: req.body.email
-  }, function(err, user) {
+  if (req.body.token) {
+    if (req.body.token) {
+      jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+        if (err) {
+          console.log('Token invalid');
+          return res.json({ success: false, message: 'Failed to authenticate token.'})
+        } else {
+          var token = jwt.sign(user, config.secret, {
+            expiresIn : 60*60*24*15 //expires in 90days
+          });
 
-    if (err) throw err;
+          res.json({
+            success: true,
+            message: 'loggin success',
+            token: token
+          });
+        }
+      })
+    } else {
+      return res.status(403).send({
+        success: false,
+        message: 'No token provided.'
+      });
+    }
+    var token = jwt.sign(user, config.secret, {
+      expiresIn : 60*60*24*15 //expires in 90days
+    });
 
-    if (!user) {
+    user.token = token;
 
-      createUser(req, res);
+  } else {
+    User.findOne({
+      email: req.body.email
+    }, function(err, user) {
 
-    } else if (user) {
+      if (err) throw err;
 
-      if (user.ionic_cloud_id !== req.body.cloud_id && user.password !== req.body.password) {
-        res.json({ success: false, message: 'The password is not matching'});
-      } else {
-        var token = jwt.sign(user, config.secret, {
-          expiresIn : 60*60*24*15 //expires in 90days
-        });
+      if (!user) {
 
-        user.token = token;
+        createUser(req, res);
 
-        user.save(function(err) {
-          if (err) throw err;
-        });
+      } else if (user) {
 
-        res.json({
-          success: true,
-          message: 'loggin success',
-          token: token
-        });
+        if (user.ionic_cloud_id !== req.body.cloud_id && user.password !== req.body.password) {
+          res.json({ success: false, message: 'The password is not matching'});
+        } else {
+          var token = jwt.sign(user, config.secret, {
+            expiresIn : 60*60*24*15 //expires in 90days
+          });
+
+          user.token = token;
+
+          user.save(function(err) {
+            if (err) throw err;
+          });
+
+          res.json({
+            success: true,
+            message: 'loggin success',
+            token: token
+          });
+        }
+
       }
 
-    }
-
-  });
+    });
+  }
 };
 
 createUser = function(req, res) {

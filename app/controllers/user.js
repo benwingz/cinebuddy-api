@@ -12,7 +12,10 @@ exports.authenticate = function(req, res) {
         console.log('Token invalid');
         return res.json({ success: false, message: 'Failed to authenticate token.'})
       } else {
-        var newtoken = jwt.sign(decoded, config.secret, {
+        var user = decoded;
+        delete user.exp;
+        delete user.iat;
+        var newtoken = jwt.sign(user, config.secret, {
           expiresIn : 60*60*24*15 //expires in 90days
         });
 
@@ -128,7 +131,7 @@ exports.findUser = function(req, res) {
   }
   if(token) {
     var decoded = jwt.decode(token);
-    User.findOne({_id: decoded._doc._id}, function(err, user) {
+    User.findOne({email: decoded.email}, function(err, user) {
       if (err) throw err;
       if (!user) {
         res.json({ success: false, message: 'No user relative to this token'});

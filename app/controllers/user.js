@@ -12,6 +12,8 @@ exports.authenticate = function(req, res) {
         console.log('Token invalid');
         return res.json({ success: false, message: 'Failed to authenticate token.'})
       } else {
+        console.log('jwt decoded', decoded);
+        console.log('jwt decode', jwt.decode(token));
         var user = jwt.decode(token)._doc;
         console.log('user', user);
         var newtoken = jwt.sign(user, config.secret, {

@@ -6,35 +6,24 @@ var User = require('../models/user');
 
 exports.authenticate = function(req, res) {
   if (req.body.token) {
-    if (req.body.token) {
-      jwt.verify(token, app.get('superSecret'), function(err, decoded) {
-        if (err) {
-          console.log('Token invalid');
-          return res.json({ success: false, message: 'Failed to authenticate token.'})
-        } else {
-          var token = jwt.sign(user, config.secret, {
-            expiresIn : 60*60*24*15 //expires in 90days
-          });
+    var token = req.body.token;
+    jwt.verify(token, config.secret, function(err, decoded) {
+      if (err) {
+        console.log('Token invalid');
+        return res.json({ success: false, message: 'Failed to authenticate token.'})
+      } else {
+        var user = jwt.decode(token)._doc;
+        var newtoken = jwt.sign(user, config.secret, {
+          expiresIn : 60*60*24*15 //expires in 90days
+        });
 
-          res.json({
-            success: true,
-            message: 'loggin success',
-            token: token
-          });
-        }
-      })
-    } else {
-      return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
-      });
-    }
-    var token = jwt.sign(user, config.secret, {
-      expiresIn : 60*60*24*15 //expires in 90days
-    });
-
-    user.token = token;
-
+        res.json({
+          success: true,
+          message: 'loggin success',
+          token: newtoken
+        });
+      }
+    })
   } else {
     User.findOne({
       email: req.body.email

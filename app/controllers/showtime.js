@@ -56,12 +56,19 @@ exports.theaterCloseBy = function(req, res) {
 
   request(options, function(error, response, content) {
     if (!error) {
-      res.json(JSON.parse(content));
+      res.json(populateTheater(JSON.parse(content)));
     } else {
       console.log(error);
     }
   });
 };
+
+var populateTheater = function(theatersStream) {
+  console.log(theatersStream.feed.theater);
+  if(theatersStream.feed.theater) {
+    return theatersStream.feed.theater;
+  }
+}
 
 exports.getAllocineCodeFromTitle = function(title, id) {
   return new Promise(function(fulfill, reject) {

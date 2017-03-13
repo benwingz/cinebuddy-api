@@ -64,7 +64,6 @@ exports.theaterCloseBy = function(req, res) {
 };
 
 var populateTheater = function(theatersStream) {
-  console.log(theatersStream.feed.theater);
   if(theatersStream.feed.theater) {
     return theatersStream.feed.theater;
   }

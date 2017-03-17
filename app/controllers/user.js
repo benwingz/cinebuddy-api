@@ -131,7 +131,7 @@ exports.findUser = function(req, res) {
   }
   if(token) {
     var decoded = jwt.decode(token);
-    User.findOne({email: decoded.email}, function(err, user) {
+    User.findOne({email: decoded._doc.email}, function(err, user) {
       if (err) throw err;
       if (!user) {
         res.json({ success: false, message: 'No user relative to this token'});

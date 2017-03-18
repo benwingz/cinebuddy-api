@@ -44,7 +44,6 @@ module.exports = function(app) {
   apiRoutes.post('/authenticate', user.authenticate);
 
   apiRoutes.use(function(req,res,next){
-
     var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.headers['authorization'];
 
     if(token && token.indexOf('Bearer ') !== -1) {
@@ -77,6 +76,7 @@ module.exports = function(app) {
   apiRoutes.get('/showtime/', allocine.findShowTime);
   apiRoutes.get('/searchmovie/:id', allocine.findMovieById);
   apiRoutes.get('/theatercloseby/', allocine.theaterCloseBy);
+  apiRoutes.get('/theaternearby/', allocine.theaterNearby);
   apiRoutes.post('/showing/', cinebuddy.createShowing);
   apiRoutes.get('/showing/:id', cinebuddy.getShowing);
 

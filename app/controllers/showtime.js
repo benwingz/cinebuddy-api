@@ -4,6 +4,8 @@ var Matchid = require('../models/matchid');
 var rp = require('request-promise');
 var partnerCode = config.showtimeProviderAPIkey;
 var allocineApiUrl = config.showtimeProviderUrl;
+var googlePlacesUrl = config.googlePlacesUrl;
+var googlePlacesApiKey = config.googlePlacesApiKey;
 
 var options = {
   url: '',
@@ -64,7 +66,6 @@ exports.theaterCloseBy = function(req, res) {
 };
 
 var populateTheater = function(theatersStream) {
-  console.log(theatersStream.feed.theater);
   if(theatersStream.feed.theater) {
     return theatersStream.feed.theater;
   }
@@ -100,3 +101,19 @@ exports.getAllocineCodeFromTitle = function(title, id) {
     });
   });
 };
+
+exports.theaterNearby = function(req, res) {
+  console.log('params:', req.params)
+  options.url = googlePlacesUrl + '/nearbysearch/json?key=' + googlePlacesApiKey + '&type=movie_theater&radius=2000&location=' + req.query.lat.toString() + ',' + req.query.lng.toString();
+  request(options, function(error, response, content) {
+    if (!error) {
+      res.json(returnResultsGoogle(JSON.parse(content)));
+    } else {
+      console.log(error);
+    }
+  });
+};
+
+var returnResultsGoogle = function(stream) {
+  return stream.results;
+}

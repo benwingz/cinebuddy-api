@@ -17,7 +17,7 @@ var options = {
 exports.findShowTime = function(req, res) {
   if (req.query.lat && req.query.lng) {
     if (!req.query.radius) {
-      req.query.radius = 1;
+      req.query.radius = 5;
     }
     if (req.query.theaters && !req.query.movie) {
       options.url = allocineApiUrl + 'showtimelist?partner=' + partnerCode + '&lat=' + req.query.lat + '&long=' + req.query.lng + '&radius=' + req.query.radius + '&theaters=' + req.query.theaters + '&format=json';
@@ -104,7 +104,7 @@ exports.getAllocineCodeFromTitle = function(title, id) {
 
 exports.theaterNearby = function(req, res) {
   console.log('params:', req.params)
-  options.url = googlePlacesUrl + '/nearbysearch/json?key=' + googlePlacesApiKey + '&type=movie_theater&radius=2000&location=' + req.query.lat.toString() + ',' + req.query.lng.toString();
+  options.url = googlePlacesUrl + '/nearbysearch/json?key=' + googlePlacesApiKey + '&type=movie_theater&radius=5000&location=' + req.query.lat.toString() + ',' + req.query.lng.toString();
   request(options, function(error, response, content) {
     if (!error) {
       res.json(returnResultsGoogle(JSON.parse(content)));

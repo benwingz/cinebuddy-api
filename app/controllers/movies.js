@@ -45,7 +45,7 @@ exports.findAll = function(req, res) {
   if(!req.query.page) {
     req.query.page = 1;
   }
-  request(movieApiBaseUrl + '/movie/now_playing?api_key=' + apiKeyMovieDB + '&language=fr-FR&page=' + req.query.page, function(error, response, content){
+  request(movieApiBaseUrl + '/movie/now_playing?api_key=' + apiKeyMovieDB + '&language=fr-FR&page=' + req.query.page + '&region=FR', function(error, response, content){
     if (!error) {
       res.send(populateImagesUrl(JSON.parse(content)));
     }

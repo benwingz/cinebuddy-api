@@ -25,5 +25,5 @@ module.exports = mongoose.model('Movie', new Schema({
   title: String,
   vote_average: Number,
   vote_count: Number,
-  idShowtimeProvider: Number
+  idShowtimeProvider: Number,
 }));

@@ -82,15 +82,20 @@ exports.getAllocineCodeFromTitle = function(title, id) {
         options.url = allocineApiUrl + 'search?partner=' + partnerCode + '&q=' + encodeURIComponent(title) + '&filter=movie&count=1&format=json';
         request(options, function(error, response, content) {
           if (!error) {
-            var idShowtimeProvider = JSON.parse(content).feed.movie[0].code;
-            var newMatchid = new Matchid({
-              idMovieDb: id,
-              idShowtimeProvider: idShowtimeProvider
-            });
-            newMatchid.save(function(err) {
-              if(err) reject(err);
-            });
-            fulfill(idShowtimeProvider);
+            if(JSON.parse(content).feed.movie) {
+              var idShowtimeProvider = JSON.parse(content).feed.movie[0].code;
+              var newMatchid = new Matchid({
+                idMovieDb: id,
+                idShowtimeProvider: idShowtimeProvider
+              });
+              newMatchid.save(function(err) {
+                if(err) reject(err);
+              });
+              fulfill(idShowtimeProvider);
+            } else {
+              console.log('Film name ' + encodeURIComponent(title) + 'have no id showtime');
+              fulfill('');
+            }
           } else {
             reject(error);
           }

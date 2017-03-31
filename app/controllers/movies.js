@@ -42,14 +42,18 @@ request(movieApiBaseUrl + '/configuration?api_key=' + apiKeyMovieDB, function(er
 });
 
 exports.findAll = function(req, res) {
-  if(!req.query.page) {
-    req.query.page = 1;
-  }
-  request(movieApiBaseUrl + '/movie/now_playing?api_key=' + apiKeyMovieDB + '&language=fr-FR&page=' + req.query.page + '&region=FR', function(error, response, content){
-    if (!error) {
-      res.send(populateImagesUrl(JSON.parse(content)));
+  Movie.find({poster_path:{'$ne': null}, overview: {'$ne': null}, idShowtimeProvider:{'$ne': null} }).sort('-popularity').then(
+    function(movies){
+      if(movies.length > 0) {
+        res.json(movies);
+      } else {
+        res.json({success: false, message:"No movies"});
+      }
+    },
+    function(error) {
+      console.log('Get all movie error:', error);
     }
-  });
+  );
 };
 exports.findById = function(req, res) {
   Movie.findOne({id: req.params.id}, function(err, movie){

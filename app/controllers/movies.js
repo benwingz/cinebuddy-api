@@ -42,7 +42,11 @@ request(movieApiBaseUrl + '/configuration?api_key=' + apiKeyMovieDB, function(er
 });
 
 exports.findAll = function(req, res) {
-  Movie.find({poster_path:{'$ne': null}, overview: {'$ne': null}, idShowtimeProvider:{'$ne': null} }).sort('-popularity').then(
+  Movie.find({
+    poster_path:{'$ne': null},
+    overview: {'$ne': null},
+    idShowtimeProvider:{'$ne': null}
+    }).sort('-popularity').then(
     function(movies){
       if(movies.length > 0) {
         res.json(movies);
